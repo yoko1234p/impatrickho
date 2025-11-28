@@ -1,3 +1,4 @@
+
 import { Experience, Project, SkillCategory } from './types';
 
 export const PERSONAL_INFO = {
@@ -6,7 +7,8 @@ export const PERSONAL_INFO = {
   location: "Hong Kong",
   email: "pathoworkmail@gmail.com",
   phone: "+852 5301 1499",
-  portfolio: "https://patrick-portfolio.vercel.app",
+  portfolio: "https://impatrickho.vercel.app/",
+  linkedin: "https://www.linkedin.com/in/patrick-ho-256b581b6/",
   summary: "Focused on UX & Engineering Quality. Expert in React/Next.js ecosystems, Enterprise CMS solutions, Cloud Infrastructure, and DevOps automation. Dedicates to bridging visual design with business goals through performant code."
 };
 

@@ -2,10 +2,11 @@
 import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { motion, useScroll, useSpring, Variants, AnimatePresence } from 'framer-motion';
-import { Terminal, Code, Cpu, Globe, MapPin, Mail, Phone, ExternalLink, Moon, Sun, Command, FolderOpen, LayoutTemplate } from 'lucide-react';
+import { Terminal, Code, Cpu, Globe, MapPin, Mail, Phone, ExternalLink, Moon, Sun, Command, FolderOpen, LayoutTemplate, Linkedin, IdCard } from 'lucide-react';
 import { Scene3D } from './components/Scene3D';
 import { ProjectCard } from './components/ProjectCard';
 import { CommandPalette } from './components/CommandPalette';
+import { BusinessCardOverlay } from './components/BusinessCardOverlay';
 import { useStore } from './store';
 import { PERSONAL_INFO, EXPERIENCES, PROJECTS, SKILLS } from './constants';
 
@@ -94,6 +95,7 @@ const LoadingOverlay = ({ onComplete }: { onComplete: () => void }) => {
 
 const App = () => {
   const { isRecruiterMode, toggleRecruiterMode, isLoading, setLoading } = useStore();
+  const [showBusinessCard, setShowBusinessCard] = useState(false);
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
@@ -146,16 +148,33 @@ const App = () => {
       
       {/* Command Palette */}
       <CommandPalette />
+      
+      {/* Business Card Overlay */}
+      <BusinessCardOverlay isOpen={showBusinessCard} onClose={() => setShowBusinessCard(false)} />
 
-      {/* Recruiter Toggle Button */}
+      {/* Top Right Controls */}
       <AnimatePresence>
         {!isLoading && (
           <motion.div 
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="fixed top-6 right-6 z-50"
+            className="fixed top-6 right-6 z-50 flex items-center gap-3"
           >
+            {/* Business Card Toggle */}
+            <button
+              onClick={() => setShowBusinessCard(true)}
+              className={`p-2 rounded-full shadow-lg transition-all duration-300
+                ${isRecruiterMode
+                  ? 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                  : 'bg-[#111]/80 backdrop-blur-md border border-white/20 text-white hover:bg-white/10 hover:border-cyber-cyan/50 hover:text-cyber-cyan'
+                }`}
+              title="Digital Business Card"
+            >
+              <IdCard size={20} />
+            </button>
+
+            {/* Mode Toggle */}
             <button
               onClick={toggleRecruiterMode}
               className={`flex items-center gap-2 px-4 py-2 rounded-full font-bold text-sm shadow-lg transition-all duration-300
@@ -165,7 +184,7 @@ const App = () => {
                 }`}
             >
               {isRecruiterMode ? <Moon size={16} /> : <Sun size={16} />}
-              <span>{isRecruiterMode ? 'Cyber Mode' : 'Recruiter Mode'}</span>
+              <span className="hidden md:inline">{isRecruiterMode ? 'Cyber Mode' : 'Recruiter Mode'}</span>
             </button>
           </motion.div>
         )}
@@ -425,13 +444,13 @@ const App = () => {
                    <Mail size={24} />
                  </a>
                  <a 
-                   href={PERSONAL_INFO.portfolio} 
+                   href={PERSONAL_INFO.linkedin} 
                    target="_blank" 
                    rel="noreferrer" 
                    className={`transition-all hover:scale-110 ${isRecruiterMode ? 'text-gray-600 hover:text-blue-600' : 'text-gray-400 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]'}`}
-                   aria-label="Portfolio"
+                   aria-label="LinkedIn"
                  >
-                   <Globe size={24} />
+                   <Linkedin size={24} />
                  </a>
               </div>
             </div>

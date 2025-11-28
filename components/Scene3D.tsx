@@ -27,6 +27,26 @@ declare global {
   }
 }
 
+declare module 'react' {
+  namespace JSX {
+    interface IntrinsicElements {
+      unrealBloomPass: any;
+      shaderPass: any;
+      points: any;
+      bufferGeometry: any;
+      bufferAttribute: any;
+      shaderMaterial: any;
+      mesh: any;
+      sphereGeometry: any;
+      meshBasicMaterial: any;
+      ringGeometry: any;
+      group: any;
+      fogExp2: any;
+      gridHelper: any;
+    }
+  }
+}
+
 extend({ UnrealBloomPass, ShaderPass });
 
 // --- Shaders ---
