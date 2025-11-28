@@ -8,12 +8,10 @@ import { useStore } from '../store';
 // --- Type Definitions ---
 extend({ UnrealBloomPass, ShaderPass });
 
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      unrealBloomPass: any;
-      shaderPass: any;
-    }
+declare module '@react-three/fiber' {
+  interface ThreeElements {
+    unrealBloomPass: any;
+    shaderPass: any;
   }
 }
 
