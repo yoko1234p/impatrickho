@@ -1,8 +1,7 @@
-
 import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { motion, useScroll, useSpring, Variants, AnimatePresence } from 'framer-motion';
-import { Terminal, Code, Cpu, Globe, MapPin, Mail, Phone, ExternalLink, Moon, Sun, Command, FolderOpen, LayoutTemplate, Linkedin, IdCard } from 'lucide-react';
+import { motion, useScroll, useSpring, Variants, AnimatePresence, useAnimation } from 'framer-motion';
+import { Terminal, Code, Cpu, Globe, MapPin, Mail, Phone, ExternalLink, Moon, Sun, Command, FolderOpen, LayoutTemplate, Linkedin, IdCard, Mouse, Move } from 'lucide-react';
 import { Scene3D } from './components/Scene3D';
 import { ProjectCard } from './components/ProjectCard';
 import { CommandPalette } from './components/CommandPalette';
@@ -33,7 +32,7 @@ const staggerContainer: Variants = {
   }
 };
 
-const LoadingOverlay = ({ onComplete }: { onComplete: () => void }) => {
+const LoadingOverlay: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
@@ -55,7 +54,7 @@ const LoadingOverlay = ({ onComplete }: { onComplete: () => void }) => {
       // Wait 2.5 seconds after hitting 100% before triggering completion
       const timer = setTimeout(() => {
         onComplete();
-      }, 500);
+      }, 2500);
       return () => clearTimeout(timer);
     }
   }, [progress, onComplete]);
@@ -90,6 +89,50 @@ const LoadingOverlay = ({ onComplete }: { onComplete: () => void }) => {
         </div>
       </div>
     </motion.div>
+  );
+};
+
+const InteractionHint = () => {
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    // Keep it visible longer for emphasis
+    const timer = setTimeout(() => {
+      setVisible(false);
+    }, 12000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <div 
+      className={`fixed bottom-12 right-6 md:bottom-12 md:right-12 z-40 pointer-events-none transition-all duration-1000 ease-in-out ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+    >
+      <div className="relative group">
+        {/* Outer Glow Ring */}
+        <div className="absolute -inset-[1px] bg-gradient-to-r from-cyber-cyan via-blue-500 to-cyber-purple rounded-full opacity-60 blur-[6px] animate-pulse"></div>
+        
+        <div className="relative flex items-center gap-4 bg-[#0a0a0a]/90 backdrop-blur-xl border border-cyber-cyan/30 px-6 py-4 rounded-full shadow-[0_0_30px_rgba(0,0,0,0.8)]">
+          
+          {/* Logo / Icon Badge */}
+          <div className="relative flex items-center justify-center w-10 h-10 bg-cyber-cyan/10 rounded-full border border-cyber-cyan/40 shadow-[0_0_15px_rgba(0,240,255,0.2)]">
+            <Mouse size={20} className="text-cyber-cyan" />
+            <div className="absolute -top-1 -right-1 bg-black rounded-full p-[1px]">
+               <Move size={14} className="text-white animate-bounce" />
+            </div>
+          </div>
+
+          {/* Text Content */}
+          <div className="flex flex-col">
+             <span className="text-[11px] font-bold text-white tracking-[0.2em] uppercase drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">
+                Interactive
+             </span>
+             <span className="text-[9px] font-mono text-cyber-cyan/90 tracking-widest">
+                DRAG TO EXPLORE 3D
+             </span>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
@@ -136,6 +179,9 @@ const App = () => {
       {/* Background 3D Scene - Always rendered, acts as the loader visual */}
       <Scene3D />
       
+      {/* Interaction Hint - Visible after loading in Cyber Mode */}
+      {!isRecruiterMode && !isLoading && <InteractionHint />}
+
       {/* Loading Overlay */}
       <AnimatePresence>
         {isLoading && (
@@ -192,7 +238,6 @@ const App = () => {
 
       {/* MAIN CONTENT - Only visible after loading */}
       {!isLoading && (
-        <>
           <main className="relative z-10 max-w-5xl mx-auto px-6 pt-12 md:pt-24 pb-12">
             
             {/* HERO SECTION */}
@@ -410,52 +455,54 @@ const App = () => {
               </div>
             </motion.section>
           </main>
+     
+      )}
 
-          {/* FOOTER - Moved outside main for full-width styling in Recruiter Mode */}
-          <footer className={`relative z-10 w-full py-12 ${isRecruiterMode ? 'bg-gray-50 border-t border-gray-200' : 'mt-12'}`}>
-            
-            {/* Cyber Footer Background */}
-            {!isRecruiterMode && (
-               <div className="absolute inset-0 bg-black/90 backdrop-blur-xl border-t border-white/10">
-                  <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent"></div>
-               </div>
-            )}
+      {/* FOOTER - Moved outside main for full-width styling in Recruiter Mode */}
+      {!isLoading && (
+        <footer className={`relative z-10 w-full py-12 ${isRecruiterMode ? 'bg-gray-50 border-t border-gray-200' : 'mt-12'}`}>
+          
+          {/* Cyber Footer Background */}
+          {!isRecruiterMode && (
+             <div className="absolute inset-0 bg-black/90 backdrop-blur-xl border-t border-white/10">
+                <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent"></div>
+             </div>
+          )}
 
-            <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-8 max-w-5xl mx-auto px-6">
-              <div className="text-center md:text-left">
-                <p className={`font-bold text-lg tracking-wide ${isRecruiterMode ? 'text-gray-900' : 'text-white'}`}>Let's build something scalable.</p>
-                <p className={`mt-2 text-sm ${isRecruiterMode ? 'text-gray-500' : 'text-gray-500'}`}>© {new Date().getFullYear()} Patrick Ho.</p>
-              </div>
-              
-              {!isRecruiterMode && (
-                <div className="hidden md:flex items-center gap-3 text-xs text-gray-500 font-mono bg-[#050505] px-4 py-2 rounded border border-white/5">
-                  <div className="flex items-center gap-1"><Command size={12} /> K</div>
-                  <span className="opacity-50">|</span>
-                  <span>OPEN COMMAND PALETTE</span>
-                </div>
-              )}
-              
-              <div className="flex gap-6">
-                 <a 
-                   href={`mailto:${PERSONAL_INFO.email}`} 
-                   className={`transition-all hover:scale-110 ${isRecruiterMode ? 'text-gray-600 hover:text-blue-600' : 'text-gray-400 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]'}`}
-                   aria-label="Email"
-                 >
-                   <Mail size={24} />
-                 </a>
-                 <a 
-                   href={PERSONAL_INFO.linkedin} 
-                   target="_blank" 
-                   rel="noreferrer" 
-                   className={`transition-all hover:scale-110 ${isRecruiterMode ? 'text-gray-600 hover:text-blue-600' : 'text-gray-400 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]'}`}
-                   aria-label="LinkedIn"
-                 >
-                   <Linkedin size={24} />
-                 </a>
-              </div>
+          <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-8 max-w-5xl mx-auto px-6">
+            <div className="text-center md:text-left">
+              <p className={`font-bold text-lg tracking-wide ${isRecruiterMode ? 'text-gray-900' : 'text-white'}`}>Let's build something scalable.</p>
+              <p className={`mt-2 text-sm ${isRecruiterMode ? 'text-gray-500' : 'text-gray-500'}`}>© {new Date().getFullYear()} Patrick Ho.</p>
             </div>
-          </footer>
-        </>
+            
+            {!isRecruiterMode && (
+              <div className="hidden md:flex items-center gap-3 text-xs text-gray-500 font-mono bg-[#050505] px-4 py-2 rounded border border-white/5">
+                <div className="flex items-center gap-1"><Command size={12} /> K</div>
+                <span className="opacity-50">|</span>
+                <span>OPEN COMMAND PALETTE</span>
+              </div>
+            )}
+            
+            <div className="flex gap-6">
+               <a 
+                 href={`mailto:${PERSONAL_INFO.email}`} 
+                 className={`transition-all hover:scale-110 ${isRecruiterMode ? 'text-gray-600 hover:text-blue-600' : 'text-gray-400 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]'}`}
+                 aria-label="Email"
+               >
+                 <Mail size={24} />
+               </a>
+               <a 
+                 href={PERSONAL_INFO.linkedin} 
+                 target="_blank" 
+                 rel="noreferrer" 
+                 className={`transition-all hover:scale-110 ${isRecruiterMode ? 'text-gray-600 hover:text-blue-600' : 'text-gray-400 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]'}`}
+                 aria-label="LinkedIn"
+               >
+                 <Linkedin size={24} />
+               </a>
+            </div>
+          </div>
+        </footer>
       )}
     </div>
   );

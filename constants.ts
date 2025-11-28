@@ -39,7 +39,10 @@ export const EXPERIENCES: Experience[] = [
       "Maintained O2O platforms, executing SEO optimization and user behavior analysis."
     ],
     tech: ["React", "Docker", "Jenkins", "SEO", "DevOps"],
-    url: "https://www.valentino-beauty.hk/"
+    relatedLinks: [
+      { label: "Valentino Beauty", url: "https://www.valentino-beauty.hk/" },
+      { label: "Johnson Electric", url: "https://www.johnsonelectric.com/en" }
+    ]
   },
   {
     company: "Kickscrew",

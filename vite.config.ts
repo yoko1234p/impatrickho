@@ -12,7 +12,8 @@ export default defineConfig({
   resolve: {
     alias: {
       // Force all 'three' imports to use the same instance from node_modules
-      three: resolve(__dirname, 'node_modules/three')
+      'three': resolve(__dirname, './node_modules/three'),
+      '@react-three/fiber': resolve(__dirname, './node_modules/@react-three/fiber')
     }
   },
   build: {
