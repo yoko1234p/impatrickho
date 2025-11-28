@@ -17,14 +17,13 @@ declare global {
       sphereGeometry: any;
       meshBasicMaterial: any;
       group: any;
-      unrealBloomPass: any;
-      shaderPass: any;
       bufferGeometry: any;
       bufferAttribute: any;
       gridHelper: any;
       instancedMesh: any;
       instancedBufferAttribute: any;
       tetrahedronGeometry: any;
+      // Removed shaderPass and unrealBloomPass to avoid conflicts with R3F types
     }
   }
 }
@@ -537,8 +536,8 @@ const PostProcess = () => {
   const { size, camera } = useThree();
   const { isRecruiterMode } = useStore();
   
-  const lensPassRef = useRef<THREE.ShaderPass>(null!);
-  const glitchPassRef = useRef<THREE.ShaderPass>(null!);
+  const lensPassRef = useRef<ShaderPass>(null!);
+  const glitchPassRef = useRef<ShaderPass>(null!);
   
   // Glitch Animation Logic
   const [glitchIntensity, setGlitchIntensity] = useState(0);
