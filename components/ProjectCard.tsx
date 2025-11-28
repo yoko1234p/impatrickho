@@ -76,7 +76,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
         transformStyle: "preserve-3d",
       }}
       initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      whileInView={{ opacity: 0.7, y: 0 }}
       viewport={{ once: true }}
       className="relative h-full"
     >
