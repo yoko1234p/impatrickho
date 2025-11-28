@@ -6,11 +6,24 @@ import { UnrealBloomPass, ShaderPass } from 'three-stdlib';
 import { useStore } from '../store';
 
 // --- Type Definitions ---
-// Extend the R3F types to include custom passes
-declare module '@react-three/fiber' {
-  interface ThreeElements {
-    unrealBloomPass: any;
-    shaderPass: any;
+// Fix: Manually declare JSX IntrinsicElements to resolve missing R3F types
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      unrealBloomPass: any;
+      shaderPass: any;
+      points: any;
+      bufferGeometry: any;
+      bufferAttribute: any;
+      shaderMaterial: any;
+      mesh: any;
+      sphereGeometry: any;
+      meshBasicMaterial: any;
+      ringGeometry: any;
+      group: any;
+      fogExp2: any;
+      gridHelper: any;
+    }
   }
 }
 
