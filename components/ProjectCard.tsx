@@ -84,7 +84,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
         className="h-full p-6 rounded-xl border border-white/10 bg-[#080808]/90 backdrop-blur-xl shadow-lg hover:border-cyber-cyan/30 hover:shadow-[0_0_25px_rgba(0,240,255,0.15)] transition-all duration-300 group overflow-hidden"
         style={{ transform: "translateZ(20px)" }}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-cyber-cyan/5 to-cyber-purple/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className="absolute inset-0 bg-gradient-to-br from-cyber-cyan/5 to-cyber-purple/10 opacity-0 group-hover:opacity-80 transition-opacity duration-500" />
         
         <div className="relative z-10 flex flex-col h-full">
           <div className="flex justify-between items-start mb-4">

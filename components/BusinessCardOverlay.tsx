@@ -14,8 +14,9 @@ export const BusinessCardOverlay: React.FC<BusinessCardProps> = ({ isOpen, onClo
   const { isRecruiterMode } = useStore();
   const [isFlipped, setIsFlipped] = useState(false);
 
-  // Use static QR code image located in public folder
-  const qrUrl = "/qrcode.png";
+  // Use api.qrserver.com to generate the QR code dynamically
+  // Added margin=0 for better fit and size=250x250 for clarity
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&margin=0&data=${encodeURIComponent(PERSONAL_INFO.portfolio)}`;
 
   if (!isOpen) return null;
 
