@@ -76,9 +76,9 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
         transformStyle: "preserve-3d",
       }}
       initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 0.7, y: 0 }}
+      whileInView={{ opacity: 0.8, y: 0 }}
       viewport={{ once: true }}
-      className="relative h-full"
+      className="relative h-full shadow-xl backdrop-blur-md"
     >
       <div 
         className="h-full p-6 rounded-xl border border-white/10 bg-[#080808]/90 backdrop-blur-xl shadow-lg hover:border-cyber-cyan/30 hover:shadow-[0_0_25px_rgba(0,240,255,0.15)] transition-all duration-300 group overflow-hidden"
