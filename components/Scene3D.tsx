@@ -1,5 +1,5 @@
 import React, { useRef, useMemo, useEffect, useState } from 'react';
-import { Canvas, useFrame, extend, useThree } from '@react-three/fiber';
+import { Canvas, useFrame, extend, useThree, ThreeElements, Object3DNode } from '@react-three/fiber';
 import { Effects, OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 import { UnrealBloomPass, ShaderPass } from 'three-stdlib';
@@ -8,24 +8,16 @@ import { useStore } from '../store';
 // --- Type Definitions ---
 extend({ UnrealBloomPass, ShaderPass });
 
-// Fix for missing JSX types in the current environment
 declare global {
   namespace JSX {
-    interface IntrinsicElements {
-      unrealBloomPass: any;
-      shaderPass: any;
-      points: any;
-      bufferGeometry: any;
-      bufferAttribute: any;
-      shaderMaterial: any;
-      group: any;
-      mesh: any;
-      sphereGeometry: any;
-      meshBasicMaterial: any;
-      ringGeometry: any;
-      fogExp2: any;
-      gridHelper: any;
-    }
+    interface IntrinsicElements extends ThreeElements {}
+  }
+}
+
+declare module '@react-three/fiber' {
+  interface ThreeElements {
+    unrealBloomPass: Object3DNode<UnrealBloomPass, typeof UnrealBloomPass>;
+    shaderPass: Object3DNode<ShaderPass, typeof ShaderPass>;
   }
 }
 
@@ -600,11 +592,9 @@ const PostProcess = () => {
   return (
     <Effects disableGamma>
       {/* Bloom */}
-      {/* @ts-ignore */}
       <unrealBloomPass threshold={0.0} strength={0.6} radius={0.7} />
       
       {/* Gravitational Lensing & Scanlines */}
-      {/* @ts-ignore */}
       <shaderPass
         ref={lensPassRef}
         args={[{
@@ -615,7 +605,6 @@ const PostProcess = () => {
       />
 
       {/* Glitch Effect (Last) */}
-      {/* @ts-ignore */}
       <shaderPass
         ref={glitchPassRef}
         args={[{
