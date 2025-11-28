@@ -1,4 +1,3 @@
-
 import React, { useRef, useMemo, useEffect, useState } from 'react';
 import { Canvas, useFrame, extend, useThree } from '@react-three/fiber';
 import { Effects, OrbitControls } from '@react-three/drei';
@@ -7,23 +6,11 @@ import { UnrealBloomPass, ShaderPass } from 'three-stdlib';
 import { useStore } from '../store';
 
 // --- Type Definitions ---
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      mesh: any;
-      ringGeometry: any;
-      shaderMaterial: any;
-      points: any;
-      sphereGeometry: any;
-      meshBasicMaterial: any;
-      group: any;
-      bufferGeometry: any;
-      bufferAttribute: any;
-      gridHelper: any;
-      instancedMesh: any;
-      instancedBufferAttribute: any;
-      tetrahedronGeometry: any;
-    }
+// Extend the R3F types to include custom passes
+declare module '@react-three/fiber' {
+  interface ThreeElements {
+    unrealBloomPass: any;
+    shaderPass: any;
   }
 }
 

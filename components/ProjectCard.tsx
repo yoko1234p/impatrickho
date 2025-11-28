@@ -81,32 +81,32 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
       className="relative h-full"
     >
       <div 
-        className="glass-panel h-full p-6 rounded-xl border-t border-l border-white/10 shadow-[0_0_15px_rgba(0,240,255,0.05)] hover:shadow-[0_0_30px_rgba(0,240,255,0.2)] transition-shadow duration-300 group overflow-hidden"
+        className="h-full p-6 rounded-xl border border-white/10 bg-[#080808]/90 backdrop-blur-xl shadow-lg hover:border-cyber-cyan/30 hover:shadow-[0_0_25px_rgba(0,240,255,0.15)] transition-all duration-300 group overflow-hidden"
         style={{ transform: "translateZ(20px)" }}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-cyber-cyan/5 to-cyber-purple/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className="absolute inset-0 bg-gradient-to-br from-cyber-cyan/5 to-cyber-purple/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         
         <div className="relative z-10 flex flex-col h-full">
           <div className="flex justify-between items-start mb-4">
-            <div className="p-2 bg-cyber-cyan/10 rounded-lg text-cyber-cyan">
+            <div className="p-2 bg-cyber-cyan/10 rounded-lg text-cyber-cyan shadow-[0_0_10px_rgba(0,240,255,0.1)]">
                <Code2 size={24} />
             </div>
-            <span className="text-xs font-mono text-cyber-cyan/60 border border-cyber-cyan/20 px-2 py-1 rounded">
+            <span className="text-xs font-mono text-cyber-cyan/80 border border-cyber-cyan/20 px-2 py-1 rounded bg-black/40">
               {project.category}
             </span>
           </div>
 
-          <h3 className="text-xl font-display font-bold text-white mb-2 group-hover:text-cyber-cyan transition-colors">
+          <h3 className="text-xl font-display font-bold text-white mb-3 group-hover:text-cyber-cyan transition-colors tracking-wide">
             {project.title}
           </h3>
           
-          <p className="text-gray-400 text-sm leading-relaxed mb-6 flex-grow">
+          <p className="text-gray-300 text-sm leading-relaxed mb-6 flex-grow font-medium">
             {project.description}
           </p>
 
           <div className="flex flex-wrap gap-2 mt-auto">
             {project.tech.map((t) => (
-              <span key={t} className="text-xs font-mono text-gray-300 bg-white/5 px-2 py-1 rounded hover:bg-white/10 transition-colors">
+              <span key={t} className="text-xs font-mono text-gray-300 bg-white/5 border border-white/5 px-2 py-1 rounded hover:bg-white/10 transition-colors">
                 {t}
               </span>
             ))}

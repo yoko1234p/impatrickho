@@ -13,6 +13,7 @@ export const PERSONAL_INFO = {
 export const EXPERIENCES: Experience[] = [
   {
     company: "Omniwe",
+    companyUrl: "https://omniwe.com/",
     role: "Front-End Developer",
     period: "Sep 2024 – Jul 2025",
     description: [
@@ -27,6 +28,7 @@ export const EXPERIENCES: Experience[] = [
   },
   {
     company: "Datawords",
+    companyUrl: "https://datawords.com/zh-hant/",
     role: "Web Developer",
     period: "Sep 2021 – Jul 2024",
     description: [
@@ -39,6 +41,7 @@ export const EXPERIENCES: Experience[] = [
   },
   {
     company: "Kickscrew",
+    companyUrl: "https://www.kickscrew.com/en-JP",
     role: "Programmer",
     period: "Sep 2020 – Aug 2021",
     description: [

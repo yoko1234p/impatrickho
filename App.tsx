@@ -101,9 +101,12 @@ const App = () => {
     restDelta: 0.001
   });
 
+  // Reset scroll when loading finishes to ensure progress bar starts at 0
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+    if (!isLoading) {
+      window.scrollTo(0, 0);
+    }
+  }, [isLoading]);
 
   useEffect(() => {
     if (isRecruiterMode) {
@@ -116,15 +119,17 @@ const App = () => {
   return (
     <div className={`min-h-screen relative transition-colors duration-500 font-sans ${isRecruiterMode ? 'bg-white text-gray-900' : 'bg-transparent text-gray-100'}`}>
       
-      {/* Scroll Progress Bar */}
-      <motion.div
-        className={`fixed top-0 left-0 right-0 h-1 origin-left z-40 ${
-          isRecruiterMode 
-            ? 'bg-gray-800' 
-            : 'bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500'
-        }`}
-        style={{ scaleX }}
-      />
+      {/* Scroll Progress Bar - Only visible when not loading */}
+      {!isLoading && (
+        <motion.div
+          className={`fixed top-0 left-0 right-0 h-1 origin-left z-40 ${
+            isRecruiterMode 
+              ? 'bg-gray-800' 
+              : 'bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 breathing-glow'
+          }`}
+          style={{ scaleX }}
+        />
+      )}
 
       {/* Background 3D Scene - Always rendered, acts as the loader visual */}
       <Scene3D />
@@ -237,7 +242,21 @@ const App = () => {
                   
                   <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-4">
                     <div className="flex flex-wrap items-center gap-4">
-                      <h3 className={`text-2xl font-bold ${isRecruiterMode ? 'text-gray-900' : 'text-white'}`}>{exp.company}</h3>
+                      <h3 className={`text-2xl font-bold ${isRecruiterMode ? 'text-gray-900' : 'text-white'}`}>
+                        {exp.companyUrl ? (
+                          <a 
+                            href={exp.companyUrl} 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="hover:text-blue-400 hover:underline hover:underline-offset-4 decoration-blue-500/50 transition-all"
+                            title={`Visit ${exp.company} website`}
+                          >
+                            {exp.company}
+                          </a>
+                        ) : (
+                          exp.company
+                        )}
+                      </h3>
                       {exp.url && (
                           <a 
                             href={exp.url} 
@@ -247,9 +266,9 @@ const App = () => {
                               ${isRecruiterMode 
                                 ? 'bg-blue-50 text-blue-600 hover:bg-blue-100' 
                                 : 'bg-blue-900/20 text-blue-300 border border-blue-500/20 hover:bg-blue-500/30 hover:text-white hover:scale-105'}`}
-                            title={`Visit ${exp.company} website`}
+                            title="View Project"
                           >
-                              <span>Visit</span>
+                              <span>Visit Project</span>
                               <ExternalLink size={14} />
                           </a>
                       )}
