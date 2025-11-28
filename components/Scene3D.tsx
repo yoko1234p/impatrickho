@@ -6,7 +6,9 @@ import { UnrealBloomPass, ShaderPass } from 'three-stdlib';
 import { useStore } from '../store';
 
 // --- Type Definitions ---
-// Fix: Manually declare JSX IntrinsicElements to resolve missing R3F types
+extend({ UnrealBloomPass, ShaderPass });
+
+// Fix for missing JSX types in the current environment
 declare global {
   namespace JSX {
     interface IntrinsicElements {
@@ -16,38 +18,16 @@ declare global {
       bufferGeometry: any;
       bufferAttribute: any;
       shaderMaterial: any;
+      group: any;
       mesh: any;
       sphereGeometry: any;
       meshBasicMaterial: any;
       ringGeometry: any;
-      group: any;
       fogExp2: any;
       gridHelper: any;
     }
   }
 }
-
-declare module 'react' {
-  namespace JSX {
-    interface IntrinsicElements {
-      unrealBloomPass: any;
-      shaderPass: any;
-      points: any;
-      bufferGeometry: any;
-      bufferAttribute: any;
-      shaderMaterial: any;
-      mesh: any;
-      sphereGeometry: any;
-      meshBasicMaterial: any;
-      ringGeometry: any;
-      group: any;
-      fogExp2: any;
-      gridHelper: any;
-    }
-  }
-}
-
-extend({ UnrealBloomPass, ShaderPass });
 
 // --- Shaders ---
 
