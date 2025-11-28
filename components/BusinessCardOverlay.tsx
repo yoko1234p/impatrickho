@@ -51,11 +51,14 @@ export const BusinessCardOverlay: React.FC<BusinessCardProps> = ({ isOpen, onClo
             onClick={() => setIsFlipped(!isFlipped)}
           >
             {/* FRONT SIDE */}
-            <div className={`absolute inset-0 [backface-visibility:hidden] rounded-xl overflow-hidden shadow-2xl border 
+            <div 
+              className={`absolute inset-0 [backface-visibility:hidden] [-webkit-backface-visibility:hidden] rounded-xl overflow-hidden shadow-2xl border 
               ${isRecruiterMode 
                 ? 'bg-white border-gray-200 text-gray-900' 
                 : 'bg-[#0a0a0a] border-cyber-cyan/30 text-white shadow-[0_0_30px_rgba(0,240,255,0.15)]'
               }`}
+              // Add translateZ(1px) to prevent z-fighting on iOS
+              style={{ transform: 'translateZ(1px)' }}
             >
               {/* Background Accents */}
               {!isRecruiterMode && (
@@ -113,13 +116,23 @@ export const BusinessCardOverlay: React.FC<BusinessCardProps> = ({ isOpen, onClo
 
             {/* BACK SIDE */}
             <div 
-              className={`absolute inset-0 [backface-visibility:hidden] rounded-xl overflow-hidden shadow-2xl border 
+              className={`absolute inset-0 [backface-visibility:hidden] [-webkit-backface-visibility:hidden] rounded-xl overflow-hidden shadow-2xl border 
               ${isRecruiterMode 
-                ? 'bg-gray-50 border-gray-200 text-gray-900' 
-                : 'bg-[#111] border-cyber-purple/30 text-white shadow-[0_0_30px_rgba(112,0,223,0.15)]'
+                ? 'bg-white border-gray-200 text-gray-900' // Matches Front
+                : 'bg-[#0a0a0a] border-cyber-cyan/30 text-white shadow-[0_0_30px_rgba(0,240,255,0.15)]' // Matches Front
               }`}
-              style={{ transform: 'rotateY(180deg)' }}
+              // Add translateZ(1px) here as well to fix iOS rendering order
+              style={{ transform: 'rotateY(180deg) translateZ(1px)' }}
             >
+               {/* Background Accents (Copied from Front) */}
+               {!isRecruiterMode && (
+                <>
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-cyber-purple/20 blur-[50px] rounded-full" />
+                  <div className="absolute bottom-0 left-0 w-32 h-32 bg-cyber-cyan/20 blur-[50px] rounded-full" />
+                  <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20" />
+                </>
+              )}
+
                <div className="relative z-10 h-full flex items-center justify-between p-8">
                   <div className="flex flex-col gap-6">
                     <a href={`mailto:${PERSONAL_INFO.email}`} className="flex items-center gap-3 group">
