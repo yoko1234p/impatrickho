@@ -32,11 +32,11 @@ const staggerContainer: Variants = {
   }
 };
 
-const LoadingOverlay = () => {
+const LoadingOverlay = ({ onComplete }: { onComplete: () => void }) => {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    // Simulate loading progress over 2.5 seconds
+    // Simulate loading progress
     const interval = setInterval(() => {
       setProgress(prev => {
         if (prev >= 100) {
@@ -49,11 +49,25 @@ const LoadingOverlay = () => {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    if (progress === 100) {
+      // Wait 2.5 seconds after hitting 100% before triggering completion
+      const timer = setTimeout(() => {
+        onComplete();
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [progress, onComplete]);
+
   return (
     <motion.div 
       initial={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.8, ease: "easeInOut" }}
+      exit={{ 
+        opacity: 0,
+        scale: 1.1,
+        filter: "blur(20px) brightness(1.5)", // "Collapse" / burnout effect
+        transition: { duration: 1.2, ease: "easeInOut" } 
+      }}
       className="fixed inset-0 z-50 flex flex-col items-center justify-center pointer-events-none"
     >
       <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
@@ -89,12 +103,7 @@ const App = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    // Simulate initial loading time for the black hole to "form"
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2800);
-    return () => clearTimeout(timer);
-  }, [setLoading]);
+  }, []);
 
   useEffect(() => {
     if (isRecruiterMode) {
@@ -122,7 +131,12 @@ const App = () => {
       
       {/* Loading Overlay */}
       <AnimatePresence>
-        {isLoading && <LoadingOverlay key="loader" />}
+        {isLoading && (
+          <LoadingOverlay 
+            key="loader" 
+            onComplete={() => setLoading(false)} 
+          />
+        )}
       </AnimatePresence>
       
       {/* Command Palette */}
