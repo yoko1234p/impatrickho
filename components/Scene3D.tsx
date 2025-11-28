@@ -23,7 +23,6 @@ declare global {
       instancedMesh: any;
       instancedBufferAttribute: any;
       tetrahedronGeometry: any;
-      // Removed shaderPass and unrealBloomPass to avoid conflicts with R3F types
     }
   }
 }
@@ -443,7 +442,9 @@ const OptimizedStars = () => {
 const BlackHoleObject = () => {
   const diskRef = useRef<THREE.Mesh>(null!);
   const horizonRef = useRef<THREE.Mesh>(null!);
+  const groupRef = useRef<THREE.Group>(null!);
   const { camera, viewport } = useThree();
+  const { isLoading } = useStore();
 
   const diskUniforms = useMemo(() => ({ 
       uTime: { value: 0 },
@@ -474,22 +475,23 @@ const BlackHoleObject = () => {
       (horizonRef.current.material as THREE.ShaderMaterial).uniforms.uTime.value = t;
       (horizonRef.current.material as THREE.ShaderMaterial).uniforms.uCameraPosition.value.copy(camera.position);
     }
+    
+    // Intro Animation: Scale up black hole when loading
+    if (groupRef.current) {
+        if (isLoading) {
+             const scaleProgress = THREE.MathUtils.clamp(t * 0.8, 0, 1);
+             const easedScale = scaleProgress * (2 - scaleProgress); // Ease out
+             groupRef.current.scale.setScalar(easedScale * (viewport.width < 5 ? 0.55 : 1.0));
+        } else {
+             // Final settle scale
+             const targetScale = viewport.width < 5 ? 0.55 : 1.0;
+             groupRef.current.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), 0.05);
+        }
+    }
   });
 
-  // Responsive Scaling & Positioning
-  const responsiveScale = useMemo(() => {
-    if (viewport.width < 5) return 0.55; // Mobile
-    if (viewport.width < 8) return 0.75; // Tablet
-    return 1.0; // Desktop
-  }, [viewport.width]);
-
-  const responsivePosition = useMemo(() => {
-    if (viewport.width < 5) return [0, 0, 0] as [number, number, number]; 
-    return [0, 0, 0] as [number, number, number];
-  }, [viewport.width]);
-
   return (
-    <group scale={responsiveScale} position={responsivePosition}>
+    <group ref={groupRef} position={[0, 0, 0]}>
       {/* 1. Black Core */}
       <mesh renderOrder={0} frustumCulled={false}>
         <sphereGeometry args={[1.3, 128, 64]} />
@@ -650,17 +652,39 @@ const InteractionHint = () => {
   );
 };
 
+// Camera Controller for Loading Animation
+const CameraController = () => {
+  const { camera } = useThree();
+  const { isLoading } = useStore();
+  
+  useFrame((state) => {
+    if (isLoading) {
+      // Gentle zoom out effect during loading
+      // camera.position.set(-6.5, 5.0, 6.5); <- Target
+      const t = state.clock.elapsedTime;
+      // Start closer and zoom out
+      camera.position.x = THREE.MathUtils.lerp(camera.position.x, -6.5, 0.02);
+      camera.position.y = THREE.MathUtils.lerp(camera.position.y, 5.0, 0.02);
+      camera.position.z = THREE.MathUtils.lerp(camera.position.z, 6.5, 0.02);
+      camera.lookAt(0, 0, 0);
+    }
+  });
+  
+  return null;
+}
+
 export const Scene3D = () => {
-  const { isRecruiterMode } = useStore();
+  const { isRecruiterMode, isLoading } = useStore();
 
   return (
     <div className={`fixed inset-0 z-0 transition-opacity duration-1000 ${isRecruiterMode ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
          style={{ background: 'radial-gradient(ellipse at center, #100518 0%, #020104 70%)' }}>
       
-      {!isRecruiterMode && <InteractionHint />}
+      {!isRecruiterMode && !isLoading && <InteractionHint />}
 
       <Canvas
-        camera={{ position: [-6.5, 5.0, 6.5], fov: 60 }}
+        // Initial camera position is slightly closer for the zoom-out effect
+        camera={{ position: [-3, 2, 3], fov: 60 }}
         dpr={[1, 1.5]}
         gl={{ 
           antialias: true,
@@ -674,11 +698,13 @@ export const Scene3D = () => {
         {!isRecruiterMode && (
           <>
             <gridHelper args={[100, 50, 0x00ffff, 0x00ffff]} position={[0, -10, 0]} material-opacity={0.1} material-transparent material-blending={THREE.AdditiveBlending} />
+            <CameraController />
             <BlackHoleObject />
             <ParticleSystem />
             <OptimizedStars />
             <PostProcess />
             <OrbitControls 
+              enabled={!isLoading} // Disable controls during loading
               enableZoom={false} 
               enablePan={false} 
               enableDamping 

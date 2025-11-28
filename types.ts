@@ -1,3 +1,4 @@
+
 export interface Experience {
   company: string;
   role: string;
@@ -22,6 +23,8 @@ export interface SkillCategory {
 
 export type RecruiterState = {
   isRecruiterMode: boolean;
+  isLoading: boolean;
   toggleRecruiterMode: () => void;
   setRecruiterMode: (value: boolean) => void;
+  setLoading: (value: boolean) => void;
 };
