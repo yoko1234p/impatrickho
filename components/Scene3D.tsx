@@ -1,5 +1,5 @@
 import React, { useRef, useMemo, useEffect, useState, useCallback } from 'react';
-import { Canvas, useFrame, extend, useThree, Object3DNode } from '@react-three/fiber';
+import { Canvas, useFrame, extend, useThree } from '@react-three/fiber';
 import { Effects, OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 import { UnrealBloomPass, ShaderPass } from 'three-stdlib';
@@ -7,16 +7,14 @@ import { useStore } from '../store';
 
 // --- Type Definitions ---
 // Extend @react-three/fiber types to include custom elements
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      unrealBloomPass: Object3DNode<UnrealBloomPass, typeof UnrealBloomPass>;
-      shaderPass: Object3DNode<ShaderPass, typeof ShaderPass>;
-    }
+extend({ UnrealBloomPass, ShaderPass });
+
+declare module '@react-three/fiber' {
+  interface ThreeElements {
+    unrealBloomPass: any;
+    shaderPass: any;
   }
 }
-
-extend({ UnrealBloomPass, ShaderPass });
 
 // --- Shaders ---
 

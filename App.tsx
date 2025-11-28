@@ -105,29 +105,30 @@ const InteractionHint = () => {
 
   return (
     <div 
-      className={`fixed bottom-12 right-6 md:bottom-12 md:right-12 z-40 pointer-events-none transition-all duration-1000 ease-in-out ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+      className={`fixed bottom-8 right-8 z-40 pointer-events-none transition-all duration-1000 ease-in-out ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
     >
       <div className="relative group">
-        {/* Outer Glow Ring */}
-        <div className="absolute -inset-[1px] bg-gradient-to-r from-cyber-cyan via-blue-500 to-cyber-purple rounded-full opacity-60 blur-[6px] animate-pulse"></div>
+        {/* Glow Effect */}
+        <div className="absolute -inset-1 bg-cyber-cyan/30 rounded-xl blur-md animate-pulse"></div>
         
-        <div className="relative flex items-center gap-4 bg-[#0a0a0a]/90 backdrop-blur-xl border border-cyber-cyan/30 px-6 py-4 rounded-full shadow-[0_0_30px_rgba(0,0,0,0.8)]">
+        {/* Card Content */}
+        <div className="relative flex items-center gap-4 bg-black/90 backdrop-blur-xl border border-cyber-cyan/50 px-5 py-3 rounded-xl shadow-[0_0_30px_rgba(0,0,0,0.8)]">
           
           {/* Logo / Icon Badge */}
-          <div className="relative flex items-center justify-center w-10 h-10 bg-cyber-cyan/10 rounded-full border border-cyber-cyan/40 shadow-[0_0_15px_rgba(0,240,255,0.2)]">
-            <Mouse size={20} className="text-cyber-cyan" />
-            <div className="absolute -top-1 -right-1 bg-black rounded-full p-[1px]">
-               <Move size={14} className="text-white animate-bounce" />
+          <div className="relative flex items-center justify-center w-12 h-12 bg-cyber-cyan/10 rounded-lg border border-cyber-cyan/30">
+            <Mouse size={24} className="text-cyber-cyan" />
+            <div className="absolute -bottom-2 -right-2 bg-black border border-cyber-cyan/50 rounded-full p-1 shadow-lg">
+               <Move size={12} className="text-white animate-pulse" />
             </div>
           </div>
 
           {/* Text Content */}
           <div className="flex flex-col">
-             <span className="text-[11px] font-bold text-white tracking-[0.2em] uppercase drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">
-                Interactive
+             <span className="text-xs font-bold text-white tracking-widest uppercase mb-0.5 text-shadow-glow">
+                Explore
              </span>
-             <span className="text-[9px] font-mono text-cyber-cyan/90 tracking-widest">
-                DRAG TO EXPLORE 3D
+             <span className="text-[10px] font-mono text-cyber-cyan/80">
+                DRAG TO ROTATE
              </span>
           </div>
         </div>
