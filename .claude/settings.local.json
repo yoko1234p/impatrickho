@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__semgrep__semgrep_scan",
+      "Bash(git -C /Volumes/Work/work/sideProjects/impatrickho commit -m \"$(cat <<''EOF''\nfeat: 整合 GPT API 至 AI Chat Widget 並加強安全性\n\n- 建立 Vercel Serverless Function (/api/chat) 作為 API proxy\n- API key 只存喺 server 端，唔會暴露喺前端\n- 更新 AIChatWidget 使用 fetch 呼叫 API route\n- 加入 system prompt 限制 AI 只回答 Patrick 相關問題\n- 更新 .gitignore 排除 .env 檔案\n- 完善 README 移除 AI Studio 相關內容\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git -C /Volumes/Work/work/sideProjects/impatrickho push origin main)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

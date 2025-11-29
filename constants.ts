@@ -50,6 +50,7 @@ export const EXPERIENCES: Experience[] = [
     role: "Programmer",
     period: "Sep 2020 – Aug 2021",
     description: [
+      "Developed and maintained internal ERP system for business operations.",
       "Refactored internal systems; added persistent sorting and database updates.",
       "Integrated third-party APIs (Twilio, eDM, WhatsApp) into multiple platforms.",
       "Implemented AliCloud deployment automation."
@@ -100,6 +101,6 @@ export const SKILLS: SkillCategory[] = [
   },
   {
     category: "Tools",
-    items: ["Figma", "Photoshop", "Git", "Webpack"]
+    items: ["Figma", "Photoshop", "Git", "Webpack", "Claude Code", "Google AI Studio"]
   }
 ];
