@@ -139,14 +139,14 @@ export const BusinessCardOverlay: React.FC<BusinessCardProps> = ({ isOpen, onClo
                        <div className={`p-2 rounded-full transition-colors ${isRecruiterMode ? 'bg-white shadow-sm group-hover:bg-blue-50' : 'bg-white/5 group-hover:bg-cyber-cyan/20'}`}>
                           <Mail size={18} className={isRecruiterMode ? 'text-blue-600' : 'text-cyber-cyan'} />
                        </div>
-                       <span className="text-sm font-medium">{PERSONAL_INFO.email}</span>
+                       <span className="text-sm font-medium underline ">Email Me</span>
                     </a>
                     
                     <a href={PERSONAL_INFO.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 group">
-                       <div className={`p-2 rounded-full transition-colors ${isRecruiterMode ? 'bg-white shadow-sm group-hover:bg-blue-50' : 'bg-white/5 group-hover:bg-cyber-purple/20'}`}>
+                       <div className={`p-2 rounded-full transition-colors ${isRecruiterMode ? 'bg-white shadow-sm group-hover:bg-blue-50' : 'bg-white/5 group-hover:bg-cyber-purple/50'}`}>
                           <Linkedin size={18} className={isRecruiterMode ? 'text-blue-700' : 'text-cyber-purple'} />
                        </div>
-                       <span className="text-sm font-medium">LinkedIn</span>
+                       <span className="text-sm font-medium underline ">LinkedIn</span>
                     </a>
 
                     <div className="flex items-center gap-3 group cursor-default">

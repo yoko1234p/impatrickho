@@ -75,6 +75,32 @@
       .breathing-glow {
         animation: breathing-glow 3s ease-in-out infinite;
       }
+
+      /* Print mode - force all animations to visible */
+      .print-mode *,
+      .print-mode [style*="opacity"],
+      .print-mode [style*="transform"] {
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
+        transition: none !important;
+      }
+
+      /* Print styles */
+      @media print {
+        /* Hide 3D canvas */
+        canvas {
+          display: none !important;
+        }
+
+        /* Force all content visible */
+        * {
+          opacity: 1 !important;
+          transform: none !important;
+          animation: none !important;
+          transition: none !important;
+        }
+      }
     </style>
 <script type="importmap">
 {
