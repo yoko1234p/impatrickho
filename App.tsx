@@ -6,6 +6,7 @@ import { Scene3D } from './components/Scene3D';
 import { ProjectCard } from './components/ProjectCard';
 import { CommandPalette } from './components/CommandPalette';
 import { BusinessCardOverlay } from './components/BusinessCardOverlay';
+import { AIChatWidget } from './components/AIChatWidget';
 import { useStore } from './store';
 import { PERSONAL_INFO, EXPERIENCES, PROJECTS, SKILLS } from './constants';
 
@@ -105,7 +106,7 @@ const InteractionHint = () => {
 
   return (
     <div 
-      className={`fixed bottom-8 right-8 z-40 pointer-events-none transition-all duration-1000 ease-in-out ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+      className={`fixed bottom-12 left-1/2 -translate-x-1/2 z-40 pointer-events-none transition-all duration-1000 ease-in-out ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
     >
       <div className="relative group">
         {/* Glow Effect */}
@@ -182,6 +183,9 @@ const App = () => {
       
       {/* Interaction Hint - Visible after loading in Cyber Mode */}
       {!isRecruiterMode && !isLoading && <InteractionHint />}
+
+      {/* AI Chat Widget - Always available after loading */}
+      {!isLoading && <AIChatWidget />}
 
       {/* Loading Overlay */}
       <AnimatePresence>
