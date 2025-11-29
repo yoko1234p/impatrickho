@@ -93,7 +93,7 @@ export const SKILLS: SkillCategory[] = [
   },
   {
     category: "Frameworks",
-    items: ["Next.js", "React", "React Native", "Node.js", "Adobe AEM"]
+    items: ["Next.js", "React", "React Native", "Node.js", "Adobe AEM", "Bootstrap", "Tailwind CSS", "Sass"]
   },
   {
     category: "Cloud/DevOps",
