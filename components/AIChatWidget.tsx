@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquare, X, Send, Bot, User, Minimize2, Sparkles, Loader2 } from 'lucide-react';
+import { MessageSquare, X, Send, Bot, User, Minimize2 } from 'lucide-react';
 import { useStore } from '../store';
 
 interface Message {
@@ -16,12 +16,13 @@ export const AIChatWidget: React.FC = () => {
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  
+  const [conversationHistory, setConversationHistory] = useState<Array<{role: 'user' | 'assistant', content: string}>>([]);
+
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 'init-1',
       role: 'assistant',
-      content: "Hello! I'm Patrick's Portfolio Assistant. \n\nI can answer questions about his experience, skills, and projects based on his CV. Try asking: \"What is his tech stack?\"",
+      content: "Hello! I'm Patrick's Portfolio Assistant. \n\nI can answer questions about his experience, skills, and projects. Try asking: \"What is his tech stack?\" or \"Tell me about his work experience.\"",
       timestamp: new Date()
     }
   ]);
@@ -35,12 +36,13 @@ export const AIChatWidget: React.FC = () => {
   }, [messages, isTyping, isOpen]);
 
   const handleSend = async () => {
-    if (!inputValue.trim()) return;
+    if (!inputValue.trim() || isTyping) return;
 
+    const userMessage = inputValue.trim();
     const userMsg: Message = {
       id: Date.now().toString(),
       role: 'user',
-      content: inputValue.trim(),
+      content: userMessage,
       timestamp: new Date()
     };
 
@@ -48,17 +50,49 @@ export const AIChatWidget: React.FC = () => {
     setInputValue('');
     setIsTyping(true);
 
-    // Mock AI Response delay
-    setTimeout(() => {
+    // 更新對話歷史
+    const newHistory = [...conversationHistory, { role: 'user' as const, content: userMessage }];
+    setConversationHistory(newHistory);
+
+    try {
+      // 呼叫 Vercel API route
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ messages: newHistory }),
+      });
+
+      if (!response.ok) {
+        throw new Error('API request failed');
+      }
+
+      const data = await response.json();
+      const aiResponse = data.content || "Sorry, I couldn't process that. Please try again.";
+
       const aiMsg: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: "This is a UI Demo response. The API is currently disconnected for stability.\n\nIn the full version, I would analyze your question: \"" + userMsg.content + "\" and retrieve details from Patrick's background.",
+        content: aiResponse,
         timestamp: new Date()
       };
+
       setMessages(prev => [...prev, aiMsg]);
+      setConversationHistory(prev => [...prev, { role: 'assistant', content: aiResponse }]);
+
+    } catch (error) {
+      console.error('AI Chat Error:', error);
+      const errorMsg: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: "Sorry, I'm having trouble connecting right now. Please try again later.",
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, errorMsg]);
+    } finally {
       setIsTyping(false);
-    }, 1500);
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -70,7 +104,7 @@ export const AIChatWidget: React.FC = () => {
 
   return (
     <div className={`fixed bottom-6 right-6 z-50 flex flex-col items-end pointer-events-none ${isRecruiterMode ? 'font-sans' : 'font-mono'}`}>
-      
+
       {/* Chat Window */}
       <AnimatePresence>
         {isOpen && (
@@ -79,13 +113,13 @@ export const AIChatWidget: React.FC = () => {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             className={`pointer-events-auto w-[90vw] md:w-[400px] h-[500px] max-h-[80vh] flex flex-col rounded-2xl overflow-hidden shadow-2xl mb-4 border transition-colors duration-500
-              ${isRecruiterMode 
-                ? 'bg-white border-gray-200 text-gray-800' 
+              ${isRecruiterMode
+                ? 'bg-white border-gray-200 text-gray-800'
                 : 'bg-[#050505]/95 backdrop-blur-xl border-cyber-cyan/30 text-gray-100 shadow-[0_0_40px_rgba(0,240,255,0.15)]'
               }`}
           >
             {/* Header */}
-            <div className={`flex items-center justify-between p-4 border-b 
+            <div className={`flex items-center justify-between p-4 border-b
               ${isRecruiterMode ? 'bg-gray-50 border-gray-200' : 'bg-white/5 border-white/10'}`}>
               <div className="flex items-center gap-3">
                 <div className={`p-2 rounded-lg ${isRecruiterMode ? 'bg-blue-100 text-blue-600' : 'bg-cyber-cyan/20 text-cyber-cyan'}`}>
@@ -105,7 +139,7 @@ export const AIChatWidget: React.FC = () => {
                 </div>
               </div>
               <div className="flex items-center gap-1">
-                <button 
+                <button
                   onClick={() => setIsOpen(false)}
                   className={`p-2 rounded-md transition-colors ${isRecruiterMode ? 'hover:bg-gray-200 text-gray-500' : 'hover:bg-white/10 text-gray-400 hover:text-white'}`}
                 >
@@ -117,7 +151,7 @@ export const AIChatWidget: React.FC = () => {
             {/* Messages Area */}
             <div className={`flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar
               ${isRecruiterMode ? 'bg-gray-50' : 'bg-black/20'}`}>
-              
+
               {messages.map((msg) => (
                 <motion.div
                   key={msg.id}
@@ -126,7 +160,7 @@ export const AIChatWidget: React.FC = () => {
                   className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
                 >
                   <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center
-                    ${msg.role === 'user' 
+                    ${msg.role === 'user'
                       ? (isRecruiterMode ? 'bg-gray-200 text-gray-600' : 'bg-white/10 text-gray-300')
                       : (isRecruiterMode ? 'bg-blue-100 text-blue-600' : 'bg-cyber-cyan/20 text-cyber-cyan')
                     }`}
@@ -137,11 +171,11 @@ export const AIChatWidget: React.FC = () => {
                   <div className={`flex flex-col max-w-[80%] ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
                     <div className={`px-4 py-3 rounded-2xl text-sm whitespace-pre-wrap leading-relaxed
                       ${msg.role === 'user'
-                        ? (isRecruiterMode 
-                            ? 'bg-blue-600 text-white rounded-tr-sm shadow-md' 
+                        ? (isRecruiterMode
+                            ? 'bg-blue-600 text-white rounded-tr-sm shadow-md'
                             : 'bg-white/10 text-white rounded-tr-sm border border-white/10')
-                        : (isRecruiterMode 
-                            ? 'bg-white text-gray-800 rounded-tl-sm shadow-sm border border-gray-100' 
+                        : (isRecruiterMode
+                            ? 'bg-white text-gray-800 rounded-tl-sm shadow-sm border border-gray-100'
                             : 'bg-cyber-cyan/5 text-gray-200 rounded-tl-sm border border-cyber-cyan/20 shadow-[0_0_15px_rgba(0,240,255,0.05)]')
                       }`}
                     >
@@ -155,7 +189,7 @@ export const AIChatWidget: React.FC = () => {
               ))}
 
               {isTyping && (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   className="flex gap-3"
@@ -171,15 +205,15 @@ export const AIChatWidget: React.FC = () => {
                   </div>
                 </motion.div>
               )}
-              
+
               <div ref={messagesEndRef} />
             </div>
 
             {/* Input Area */}
             <div className={`p-4 border-t ${isRecruiterMode ? 'bg-white border-gray-200' : 'bg-[#0a0a0a] border-white/10'}`}>
               <div className={`relative flex items-center rounded-xl overflow-hidden border transition-all duration-300
-                ${isRecruiterMode 
-                  ? 'bg-gray-50 border-gray-200 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-100' 
+                ${isRecruiterMode
+                  ? 'bg-gray-50 border-gray-200 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-100'
                   : 'bg-white/5 border-white/10 focus-within:border-cyber-cyan/50 focus-within:shadow-[0_0_15px_rgba(0,240,255,0.1)]'
                 }`}
               >
@@ -187,7 +221,7 @@ export const AIChatWidget: React.FC = () => {
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="Ask me anything..."
+                  placeholder="Ask about Patrick..."
                   rows={1}
                   className={`flex-1 bg-transparent px-4 py-3 outline-none resize-none max-h-32 text-sm
                     ${isRecruiterMode ? 'text-gray-900 placeholder:text-gray-400' : 'text-white placeholder:text-gray-600'}`}
@@ -197,8 +231,8 @@ export const AIChatWidget: React.FC = () => {
                   onClick={handleSend}
                   disabled={!inputValue.trim() || isTyping}
                   className={`p-2 mr-2 rounded-lg transition-all
-                    ${!inputValue.trim() 
-                      ? 'opacity-30 cursor-not-allowed' 
+                    ${!inputValue.trim() || isTyping
+                      ? 'opacity-30 cursor-not-allowed'
                       : (isRecruiterMode ? 'text-blue-600 hover:bg-blue-50' : 'text-cyber-cyan hover:bg-cyber-cyan/20 hover:shadow-[0_0_10px_rgba(0,240,255,0.2)]')
                     }`}
                 >
@@ -206,7 +240,7 @@ export const AIChatWidget: React.FC = () => {
                 </button>
               </div>
               <div className="text-[10px] text-center mt-2 opacity-40">
-                Powered by GPT-4o-mini
+                Powered by GPT
               </div>
             </div>
           </motion.div>
@@ -219,8 +253,8 @@ export const AIChatWidget: React.FC = () => {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         className={`pointer-events-auto relative group flex items-center justify-center w-14 h-14 rounded-full shadow-lg transition-all duration-500
-          ${isRecruiterMode 
-            ? 'bg-blue-600 text-white hover:bg-blue-700' 
+          ${isRecruiterMode
+            ? 'bg-blue-600 text-white hover:bg-blue-700'
             : 'bg-black/80 backdrop-blur-md border border-cyber-cyan/50 text-cyber-cyan shadow-[0_0_20px_rgba(0,240,255,0.3)] hover:shadow-[0_0_30px_rgba(0,240,255,0.6)] hover:bg-cyber-cyan/10'
           } ${isOpen ? 'rotate-90' : 'rotate-0'}`}
       >

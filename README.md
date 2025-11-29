@@ -1,20 +1,56 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Patrick Ho - Creative Developer Portfolio
 
-# Run and deploy your AI Studio app
+一個高端、互動式 3D 個人作品集網站，展示創意開發技術。
 
-This contains everything you need to run your app locally.
+## 特色功能
 
-View your app in AI Studio: https://ai.studio/apps/drive/1HX3m6Kx30zLGMgLsVzdi6t8X1gUVdD4y
+- **3D 視覺效果** - 使用 React Three Fiber 打造嘅互動式 3D 場景
+- **Command Palette** - 鍵盤快捷操作介面
+- **Recruiter Mode** - 專為招聘人員設計嘅瀏覽模式
+- **流暢動畫** - 使用 Framer Motion 實現嘅過渡效果
 
-## Run Locally
+## 技術棧
 
-**Prerequisites:**  Node.js
+- **框架**: React 18 + TypeScript
+- **構建工具**: Vite
+- **3D 渲染**: Three.js + React Three Fiber + Drei
+- **動畫**: Framer Motion
+- **狀態管理**: Zustand
+- **樣式**: Tailwind CSS
 
+## 本地開發
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+**前置要求:** Node.js
+
+1. 安裝依賴：
+   ```bash
+   npm install
+   ```
+
+2. 啟動開發服務器：
+   ```bash
+   npm run dev
+   ```
+
+3. 構建生產版本：
+   ```bash
+   npm run build
+   ```
+
+4. 預覽生產版本：
+   ```bash
+   npm run preview
+   ```
+
+## 項目結構
+
+```
+├── components/     # React 組件
+├── index.tsx       # 入口文件
+├── App.tsx         # 主應用組件
+└── ...
+```
+
+## 授權
+
+私人項目
