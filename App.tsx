@@ -7,6 +7,7 @@ import { ProjectCard } from './components/ProjectCard';
 import { CommandPalette } from './components/CommandPalette';
 import { BusinessCardOverlay } from './components/BusinessCardOverlay';
 import { AIChatWidget } from './components/AIChatWidget';
+import { PrivacyPage } from './components/privacy';
 import { useStore } from './store';
 import { PERSONAL_INFO, EXPERIENCES, PROJECTS, SKILLS } from './constants';
 
@@ -513,9 +514,28 @@ const App = () => {
   );
 };
 
+// Simple router component
+const Router: React.FC = () => {
+  const [path, setPath] = useState(window.location.pathname);
+
+  useEffect(() => {
+    const handlePopState = () => setPath(window.location.pathname);
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  // Route: /privacy
+  if (path === '/privacy' || path === '/privacy/') {
+    return <PrivacyPage />;
+  }
+
+  // Default: Main portfolio
+  return <App />;
+};
+
 const root = createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <React.StrictMode>
-    <App />
+    <Router />
   </React.StrictMode>
 );
