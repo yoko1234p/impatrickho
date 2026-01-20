@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { PageHeader, type Language } from '../shared';
-import { Accordion } from './Accordion';
+import { Accordion } from '../privacy/Accordion';
 import { enContent } from './content/en';
 import { zhHkContent } from './content/zh-hk';
-import type { PrivacyContent } from './types';
+import type { TermsContent } from './types';
 
-const LANGUAGE_STORAGE_KEY = 'nexus-privacy-language';
+const LANGUAGE_STORAGE_KEY = 'nexus-terms-language';
 
-const getContent = (language: Language): PrivacyContent => {
+const getContent = (language: Language): TermsContent => {
   return language === 'en' ? enContent : zhHkContent;
 };
 
-export const PrivacyPage: React.FC = () => {
+export const TermsPage: React.FC = () => {
   const [language, setLanguage] = useState<Language>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem(LANGUAGE_STORAGE_KEY);
@@ -74,6 +74,23 @@ export const PrivacyPage: React.FC = () => {
                   pathoworkmail@gmail.com
                 </a>
               </>
+            )}
+          </p>
+          <p className="mt-4">
+            {language === 'en' ? (
+              <a
+                href="/privacy"
+                className="text-blue-600 hover:text-blue-800 underline"
+              >
+                Privacy Policy
+              </a>
+            ) : (
+              <a
+                href="/privacy"
+                className="text-blue-600 hover:text-blue-800 underline"
+              >
+                隱私政策
+              </a>
             )}
           </p>
         </footer>

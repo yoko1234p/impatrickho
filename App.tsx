@@ -8,6 +8,7 @@ import { CommandPalette } from './components/CommandPalette';
 import { BusinessCardOverlay } from './components/BusinessCardOverlay';
 import { AIChatWidget } from './components/AIChatWidget';
 import { PrivacyPage } from './components/privacy';
+import { TermsPage } from './components/terms';
 import { useStore } from './store';
 import { PERSONAL_INFO, EXPERIENCES, PROJECTS, SKILLS } from './constants';
 
@@ -527,6 +528,11 @@ const Router: React.FC = () => {
   // Route: /privacy
   if (path === '/privacy' || path === '/privacy/') {
     return <PrivacyPage />;
+  }
+
+  // Route: /terms
+  if (path === '/terms' || path === '/terms/') {
+    return <TermsPage />;
   }
 
   // Default: Main portfolio
